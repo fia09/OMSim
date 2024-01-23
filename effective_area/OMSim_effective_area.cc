@@ -58,9 +58,9 @@ int main(int argc, char *argv[])
 
 		lSpecific.add_options()
 		("world_radius,w", po::value<G4double>()->default_value(3.0), "radius of world sphere in m")
-		("radius,r", po::value<G4double>()->default_value(300.0), "plane wave radius in mm")
-		("distance,d", po::value<G4double>()->default_value(2000), "plane wave distance from origin, in mm")
-		("theta,t", po::value<G4double>()->default_value(0.0), "theta (= zenith) in deg")
+		("radius,r", po::value<G4double>()->default_value(300.0), "plane wave radius in mm") //300
+		("distance,d", po::value<G4double>()->default_value(800), "plane wave distance from origin, in mm") //2000
+		("theta,t", po::value<G4double>()->default_value(30.0), "theta (= zenith) in deg") //0.0
 		("phi,f", po::value<G4double>()->default_value(0.0), "phi (= azimuth) in deg")
 		("wavelength,l", po::value<G4double>()->default_value(400.0), "wavelength of incoming light in nm")
 		("angles_file,i", po::value<std::string>(), "The input angle pairs file to be scanned. The file should contain two columns, the first column with the theta (zenith) and the second with phi (azimuth) in degrees.")

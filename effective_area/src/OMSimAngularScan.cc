@@ -62,12 +62,17 @@ void AngularScan::configureScan()
     lUIinterface.applyCommand("/event/verbose 0");
     lUIinterface.applyCommand("/control/verbose 0");
     lUIinterface.applyCommand("/run/verbose 0");
+
+  //  lUIinterface.applyCommand("/gps/particle mu-");
+  //  lUIinterface.applyCommand("/gps/energy 20000000000000.6 eV");
+
     lUIinterface.applyCommand("/gps/particle opticalphoton");
     lUIinterface.applyCommand("/gps/energy", 1239.84193 / mWavelength, "eV");
+
     lUIinterface.applyCommand("/gps/pos/type Plane");
     lUIinterface.applyCommand("/gps/pos/shape Circle");
     lUIinterface.applyCommand("/gps/pos/centre 0 0 30 cm");
-    lUIinterface.applyCommand("/gps/pos/radius 80 mm");
+    lUIinterface.applyCommand("/gps/pos/radius 100 mm");
     lUIinterface.applyCommand("/gps/pos/rot1 0 1 0");
     lUIinterface.applyCommand("/gps/pos/rot2 0 0 1");
     lUIinterface.applyCommand("/gps/ang/rot1 0 1 0");

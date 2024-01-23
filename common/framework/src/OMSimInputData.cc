@@ -193,12 +193,14 @@ G4Material *InputDataManager::getMaterial(G4String pName)
                            "RiAbs_Gel_QGel900", "RiAbs_Gel_Wacker612Company",
                            "Ri_Vacuum"};
         G4String lWorld[] = {"Ri_Air", "IceCubeICE", "IceCubeICE_SPICE"};
+        
 
         // Get user argument parameters
         OMSimCommandArgsTable &lArgs = OMSimCommandArgsTable::getInstance();
         G4int lGlassIndex = lArgs.get<G4int>("glass");
         G4int lGelIndex = lArgs.get<G4int>("gel");
         G4int lEnvironmentIndex = lArgs.get<G4int>("environment");
+
 
         if (pName == "argVesselGlass")
             return getMaterial(lGlass[lGlassIndex]);
@@ -208,6 +210,7 @@ G4Material *InputDataManager::getMaterial(G4String pName)
 
         else if (pName == "argWorld")
             return getMaterial(lWorld[lEnvironmentIndex]);
+
     }
 
     // If it is not an argument material, the material is looked up.

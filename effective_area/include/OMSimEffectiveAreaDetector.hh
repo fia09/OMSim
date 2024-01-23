@@ -8,7 +8,7 @@
 #define OMSimEffectiveAreaDetector_h 1
 
 #include "OMSimDetectorConstruction.hh"
-
+#include "G4LogicalVolume.hh"
 /**
  * @class OMSimEffectiveAreaDetector
  * @brief Class for detector construction in the effective area simulation.
@@ -23,6 +23,7 @@ public:
 private:
     void constructWorld();
     void constructDetector();
+    G4LogicalVolume *mWaterLogical;
 };
 
 #endif

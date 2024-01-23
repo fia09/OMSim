@@ -4,15 +4,14 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
-                "/data/root/include",
-                "/data/geant4/geant4-v11.1.1/install/include/Geant4"
+                "/data/a_tenb09/ROOT/root_install/include",
+                "/data/a_tenb09/Geant4/geant4-v11.1.0-install/include/Geant4"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",
             "cStandard": "c17",
             "cppStandard": "gnu++17",
-            "intelliSenseMode": "linux-gcc-x64",
-            "configurationProvider": "ms-vscode.cmake-tools"
+            "intelliSenseMode": "linux-gcc-x64"
         }
     ],
     "version": 4
