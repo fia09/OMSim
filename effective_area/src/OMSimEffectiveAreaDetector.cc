@@ -47,13 +47,6 @@ void OMSimEffectiveAreaDetector::constructWorld()
     G4PVPlacement *PoolPhysical = new G4PVPlacement(0, G4ThreeVector(0, 0, 0 * cm), lPoolLogical, "water_1", mWorldLogical, false, 0, checkOverlaps);
     lPoolLogical->SetVisAttributes(G4VisAttributes(G4Colour(0.8, 0.8, 0.8, 0.2)));
 
-// *********************************************************************
-    // Definition for material water (because using "Ri_Water" doesn't work ... )
-    G4NistManager *MatDatBase = G4NistManager::Instance();
-    double ambient_temperature = (20 + 273.15) * kelvin;
-    double ambient_pressure = 1.013 * bar;
-    G4Material *Mat_Water = new G4Material("Mat_Water", 1.0 * g / cm3, MatDatBase->FindOrBuildMaterial("G4_WATER"), kStateSolid, ambient_temperature, ambient_pressure);
-// *********************************************************************
 
     //mWaterLogical = new G4LogicalVolume(mWaterSolid, Mat_Water, "Water_log", 0, 0, 0);
     mWaterLogical = new G4LogicalVolume(mWaterSolid, mData->getMaterial("Ri_Water"), "Water_log", 0, 0, 0);
@@ -64,12 +57,12 @@ void OMSimEffectiveAreaDetector::constructWorld()
     G4LogicalBorderSurface *watersurface = new G4LogicalBorderSurface("water_skin", mWaterPhysical, PoolPhysical, mData->getOpticalSurface("Refl_tank_plastic"));
 
     // balls
-//************    G4NistManager *MatDatBase = G4NistManager::Instance();
+    G4NistManager *MatDatBase = G4NistManager::Instance();
     double ball_rad = 2.5; // radius of ball in cm
     double dip_depth = 0;  // dip depth of ball into water in cm (0 == half in water)
     G4VisAttributes *Alu_vis = new G4VisAttributes(G4Colour(0.8, 0.8, 0.9, 1.0));
-//************    double ambient_temperature = (20 + 273.15) * kelvin;
-//************    double ambient_pressure = 1.013 * bar;
+    double ambient_temperature = (20 + 273.15) * kelvin;
+    double ambient_pressure = 1.013 * bar;
     G4Material *Mat_Absorber = new G4Material("Absorber Black Paint", 1.0 * g / cm3, 1, kStateSolid, ambient_temperature);
     Mat_Absorber->AddMaterial(MatDatBase->FindOrBuildMaterial("G4_C"), 100.0 * perCent);
     G4bool gBallGrid = true;

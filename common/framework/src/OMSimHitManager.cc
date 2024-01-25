@@ -176,7 +176,7 @@ void OMSimHitManager::sortHitStatsByTime(HitStats &lHits)
  * - 5 occurrences of 1 PMT detecting a hit within the time window.
  * - 3 occurrences of 2 PMTs detecting hits within the same window.
  * - 2 occurrences of 3 PMTs detecting hits within the window.
- *
+ * 
  * @param pTimeWindow The time window within which to calculate the multiplicity (in seconds).
  * @param moduleNumber The index of the module for which to calculate the multiplicity. Default is 0.
  * @return A vector containing the multiplicity data.

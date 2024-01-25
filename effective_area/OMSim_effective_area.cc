@@ -21,9 +21,11 @@ void effectiveAreaSimulation()
 	AngularScan *lScanner = new AngularScan(lArgs.get<G4double>("radius"), lArgs.get<G4double>("distance"), lArgs.get<G4double>("wavelength"));
 
 	lAnalysisManager.mOutputFileName = lArgs.get<std::string>("output_file") + ".dat";
-
+	lAnalysisManager.mOutputFileNameMultiplicity = lArgs.get<std::string>("output_file") + "_multiplicity.dat";
+	lAnalysisManager.mOutputFileNameInfo = lArgs.get<std::string>("output_file") + "_info.dat"; 
 	bool lWriteHeader = !lArgs.get<bool>("no_header");
 	if (lWriteHeader) lAnalysisManager.writeHeader();
+
 
 	// If angle file is provided, run over all angle pairs in file
 	if (lArgs.keyExists("angles_file"))
@@ -36,6 +38,8 @@ void effectiveAreaSimulation()
 		{
 			lScanner->runSingleAngularScan(lPhis.at(i), lThetas.at(i));
 			lAnalysisManager.writeScan(lPhis.at(i), lThetas.at(i));
+			lAnalysisManager.writeMultiplicity();
+			lAnalysisManager.writeHitInformation();
 			lHitManager.reset();
 		}
 	}
@@ -44,6 +48,8 @@ void effectiveAreaSimulation()
 	{
 		lScanner->runSingleAngularScan(lArgs.get<G4double>("phi"), lArgs.get<G4double>("theta"));
 		lAnalysisManager.writeScan(lArgs.get<G4double>("phi"), lArgs.get<G4double>("theta"));
+		lAnalysisManager.writeMultiplicity();
+		lAnalysisManager.writeHitInformation();
 		lHitManager.reset();
 	}
 }
@@ -59,12 +65,13 @@ int main(int argc, char *argv[])
 		lSpecific.add_options()
 		("world_radius,w", po::value<G4double>()->default_value(3.0), "radius of world sphere in m")
 		("radius,r", po::value<G4double>()->default_value(300.0), "plane wave radius in mm") //300
-		("distance,d", po::value<G4double>()->default_value(800), "plane wave distance from origin, in mm") //2000
-		("theta,t", po::value<G4double>()->default_value(30.0), "theta (= zenith) in deg") //0.0
+		("distance,d", po::value<G4double>()->default_value(2000), "plane wave distance from origin, in mm") //2000
+		("theta,t", po::value<G4double>()->default_value(0.0), "theta (= zenith) in deg") //0.0
 		("phi,f", po::value<G4double>()->default_value(0.0), "phi (= azimuth) in deg")
 		("wavelength,l", po::value<G4double>()->default_value(400.0), "wavelength of incoming light in nm")
 		("angles_file,i", po::value<std::string>(), "The input angle pairs file to be scanned. The file should contain two columns, the first column with the theta (zenith) and the second with phi (azimuth) in degrees.")
 		("no_header", po::bool_switch(), "if given, the header of the output file will not be written");
+		//("multiplicity_study", po::bool_switch(), "multiplicity is calculated and written in output");
 
 
 		po::options_description lAllargs("Allowed input arguments");

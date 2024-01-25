@@ -34,8 +34,12 @@ public:
 	void writeScan(G4double pPhi, G4double pTheta);
 	void writeHeader();
     effectiveAreaResult calculateEffectiveArea(double pHits);
+    void writeMultiplicity();
+    void writeHitInformation();
 
     G4String mOutputFileName;
+    G4String mOutputFileNameMultiplicity;
+    G4String mOutputFileNameInfo;
     std::fstream mDatafile;
 private:
 
