@@ -143,7 +143,7 @@ G4bool OMSimSensitiveDetector::checkBoundaryAbsorption(G4Step *aStep)
     if (mBoundaryProcess)
     {
       G4OpBoundaryProcessStatus boundaryStatus = mBoundaryProcess->GetStatus();
-      if (boundaryStatus == G4OpBoundaryProcessStatus::Absorption)
+      if (boundaryStatus == G4OpBoundaryProcessStatus::Detection)
       {
         return true;
       };
