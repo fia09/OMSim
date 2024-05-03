@@ -34,7 +34,7 @@ public:
 	void writeScan(G4double pPhi, G4double pTheta);
 	void writeHeader();
     effectiveAreaResult calculateEffectiveArea(double pHits);
-    void writeMultiplicity();
+    void writeMultiplicity(G4double pTimeWindow);
     void writeHitInformation();
 
     G4String mOutputFileName;

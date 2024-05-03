@@ -184,6 +184,8 @@ void OMSimHitManager::sortHitStatsByTime(HitStats &lHits)
  * @param pModuleIndex The index of the module for which to calculate the multiplicity. Default is 0.
  * @return A vector containing the multiplicity data.
  */
+
+
 std::vector<int> OMSimHitManager::calculateMultiplicity(const G4double pTimeWindow, int pModuleIndex)
 {
 	log_debug("Calculating multiplicity in time window {} for module with index", pTimeWindow, pModuleIndex);
@@ -193,9 +195,11 @@ std::vector<int> OMSimHitManager::calculateMultiplicity(const G4double pTimeWind
 	sortHitStatsByTime(lHitsOfModule);
 
 	std::vector<int> lMultiplicity(lNumberPMTs, 0); // Initialize with zeros and size pPMTCount
-
 	std::size_t lSkiptUntil = 0; // Index up to which we should skip in outer loop
 	int lVectorSize = lHitsOfModule.hit_time.size();
+	
+	//std::cout << "lVectorSize: " << lVectorSize << std::endl;
+	
 
 	for (std::size_t i = 0; i < lVectorSize - 1; ++i)
 	{
@@ -203,7 +207,6 @@ std::vector<int> OMSimHitManager::calculateMultiplicity(const G4double pTimeWind
 		{
 			continue;
 		}
-
 		int lPMTHits[lNumberPMTs] = {0};
 		lPMTHits[lHitsOfModule.PMT_hit.at(i)] = 1;
 		int lcurrentSum = 0;
@@ -213,15 +216,14 @@ std::vector<int> OMSimHitManager::calculateMultiplicity(const G4double pTimeWind
 		{
 			if ((lHitsOfModule.hit_time.at(j) - lHitsOfModule.hit_time.at(i)) > pTimeWindow)
 			{
-				lSkiptUntil = j;
 				break;
 			}
 			else
 			{
 				lPMTHits[lHitsOfModule.PMT_hit.at(j)] = 1;
 			}
+			lSkiptUntil = j;
 		}
-
 		// Calculate the multiplicity
 		for (std::size_t k = 0; k < lNumberPMTs; ++k)
 		{
@@ -231,3 +233,4 @@ std::vector<int> OMSimHitManager::calculateMultiplicity(const G4double pTimeWind
 	}
 	return lMultiplicity;
 }
+

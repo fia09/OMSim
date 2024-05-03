@@ -8,6 +8,8 @@
 #include "OMSimAngularScan.hh"
 #include "OMSimEffectiveAreaAnalyisis.hh"
 #include "OMSimEffectiveAreaDetector.hh"
+//#include "G4UniformRand.hh"
+#include "Randomize.hh"
 
 std::shared_ptr<spdlog::logger> global_logger;
 
@@ -19,6 +21,7 @@ void effectiveAreaSimulation()
 	OMSimCommandArgsTable &lArgs = OMSimCommandArgsTable::getInstance();
 	OMSimHitManager &lHitManager = OMSimHitManager::getInstance();
 	AngularScan *lScanner = new AngularScan(lArgs.get<G4double>("radius"), lArgs.get<G4double>("distance"), lArgs.get<G4double>("wavelength"));
+
 
 	lAnalysisManager.mOutputFileName = lArgs.get<std::string>("output_file") + ".dat";
 	lAnalysisManager.mOutputFileNameMultiplicity = lArgs.get<std::string>("output_file") + "_multiplicity.dat";
@@ -38,19 +41,31 @@ void effectiveAreaSimulation()
 		{
 			lScanner->runSingleAngularScan(lPhis.at(i), lThetas.at(i));
 			lAnalysisManager.writeScan(lPhis.at(i), lThetas.at(i));
-			lAnalysisManager.writeMultiplicity();
+			lAnalysisManager.writeMultiplicity(lArgs.get<G4double>("timeWindow_multiplicity"));
 			lAnalysisManager.writeHitInformation();
 			lHitManager.reset();
 		}
 	}
-	// If file with angle pairs was not provided, use the angle pairs provided through command-line arguments
+	
+	// If file was not provided, use random generated theta and phi values
 	else
 	{
-		lScanner->runSingleAngularScan(lArgs.get<G4double>("phi"), lArgs.get<G4double>("theta"));
-		lAnalysisManager.writeScan(lArgs.get<G4double>("phi"), lArgs.get<G4double>("theta"));
-		lAnalysisManager.writeMultiplicity();
-		lAnalysisManager.writeHitInformation();
-		lHitManager.reset();
+		for (int i = 0; i < OMSimCommandArgsTable::getInstance().get<G4int>("numevents"); ++i)
+		{
+			//double randomTheta = 90;
+			//double randomPhi = 90;
+    		double randomTheta = G4UniformRand() * 90.0;
+    		double randomPhi = G4UniformRand() * 360.0;
+    		lScanner->runSingleAngularScan(randomPhi, randomTheta);
+
+		// If file with angle pairs was not provided, use the angle pairs provided through command-line arguments
+		//lScanner->runSingleAngularScan(lArgs.get<G4double>("phi"), lArgs.get<G4double>("theta"));
+		//lAnalysisManager.writeScan(lArgs.get<G4double>("phi"), lArgs.get<G4double>("theta"));
+			lAnalysisManager.writeScan(randomPhi, randomTheta);
+			lAnalysisManager.writeMultiplicity(lArgs.get<G4double>("timeWindow_multiplicity"));
+			//lAnalysisManager.writeHitInformation();
+			lHitManager.reset();
+		}
 	}
 }
 
@@ -64,15 +79,14 @@ int main(int argc, char *argv[])
 
 		lSpecific.add_options()
 		("world_radius,w", po::value<G4double>()->default_value(3.0), "radius of world sphere in m")
-		("radius,r", po::value<G4double>()->default_value(300.0), "plane wave radius in mm") //300
-		("distance,d", po::value<G4double>()->default_value(2000), "plane wave distance from origin, in mm") //2000
-		("theta,t", po::value<G4double>()->default_value(0.0), "theta (= zenith) in deg") //0.0
+		("radius,r", po::value<G4double>()->default_value(2058.1), "plane wave radius in mm")
+		("distance,d", po::value<G4double>()->default_value(2058.1), "plane wave distance from origin, in mm") // diagonal of water basin
+		("theta,t", po::value<G4double>()->default_value(0.0), "theta (= zenith) in deg")
 		("phi,f", po::value<G4double>()->default_value(0.0), "phi (= azimuth) in deg")
 		("wavelength,l", po::value<G4double>()->default_value(400.0), "wavelength of incoming light in nm")
+		("timeWindow_multiplicity,m", po::value<G4double>()->default_value(50), "Time window for multiplicity in ns")
 		("angles_file,i", po::value<std::string>(), "The input angle pairs file to be scanned. The file should contain two columns, the first column with the theta (zenith) and the second with phi (azimuth) in degrees.")
 		("no_header", po::bool_switch(), "if given, the header of the output file will not be written");
-		//("multiplicity_study", po::bool_switch(), "multiplicity is calculated and written in output");
-
 
 		po::options_description lAllargs("Allowed input arguments");
 		lAllargs.add(lSimulation.mGeneralArgs).add(lSpecific);

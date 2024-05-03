@@ -112,6 +112,7 @@
         "mat4": "cpp",
         "pick_action": "cpp",
         "plane": "cpp",
-        "value": "cpp"
+        "value": "cpp",
+        "line": "cpp"
     }
 }

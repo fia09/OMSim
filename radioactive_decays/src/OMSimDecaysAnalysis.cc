@@ -35,7 +35,7 @@ void OMSimDecaysAnalysis::setOutputFileName(G4String pName)
  */
 void OMSimDecaysAnalysis::writeMultiplicity()
 {
-	std::vector<int> lMultiplicity = OMSimHitManager::getInstance().calculateMultiplicity(20 * ns);
+	std::vector<int> lMultiplicity = OMSimHitManager::getInstance().calculateMultiplicity(50 * ns);
 	mDatafile.open(mMultiplicityFileName.c_str(), std::ios::out | std::ios::app);
 	for (const auto &value : lMultiplicity)
 	{

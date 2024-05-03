@@ -19,18 +19,15 @@ AngularScan::AngularScan(G4double pBeamRadius, G4double pBeamDistance, G4double 
  */
 void AngularScan::configurePosCoordinates()
 {
-   // double lRho = mBeamDistance * sin(mTheta);
-  //  double lPosX = lRho * cos(mPhi);
-  //  double lPosY = lRho * sin(mPhi);
-  //  double lPosZ = mBeamDistance * cos(mTheta);
+    double lRho = mBeamDistance * sin(mTheta);
+    double lPosX = lRho * cos(mPhi);
+    double lPosY = lRho * sin(mPhi);
+    double lPosZ = mBeamDistance * cos(mTheta);
     OMSimUIinterface &lUIinterface = OMSimUIinterface::getInstance();
-   // lUIinterface.applyCommand("/gps/pos/centre", lPosX, lPosY, lPosZ, "mm");
-    lUIinterface.applyCommand("/gps/pos/centre 0 0 150 cm");
-    lUIinterface.applyCommand("/gps/pos/halfx 188 cm"); // Halbe Breite des Rechtecks
-    lUIinterface.applyCommand("/gps/pos/halfy 93 cm"); // Halbe Höhe des Rechtecks
-   // lUIinterface.applyCommand("/gps/pos/radius 230 cm");
-
-  //  lUIinterface.applyCommand("/gps/pos/radius", mBeamRadius, "mm");
+    lUIinterface.applyCommand("/gps/pos/centre", lPosX, lPosY, lPosZ, "mm");
+    lUIinterface.applyCommand("/gps/pos/radius", mBeamRadius, "mm");
+    //lUIinterface.applyCommand("/gps/pos/centre 0 0 205.81 cm");
+  //  lUIinterface.applyCommand("/gps/pos/radius 411.62 cm");
 }
 
 
@@ -69,13 +66,13 @@ void AngularScan::configureScan()
     lUIinterface.applyCommand("/run/verbose 0");
 
     lUIinterface.applyCommand("/gps/particle mu+");
-    lUIinterface.applyCommand("/gps/energy 1000000000.6 eV");//20000000000000.6
+    lUIinterface.applyCommand("/gps/energy 1e11 eV"); // 100 GeV
 
-   //   lUIinterface.applyCommand("/gps/particle opticalphoton");
-   //   lUIinterface.applyCommand("/gps/energy", 1239.84193 / mWavelength, "eV");
+   // lUIinterface.applyCommand("/gps/particle opticalphoton");
+   // lUIinterface.applyCommand("/gps/energy", 1239.84193 / mWavelength, "eV");
 
     lUIinterface.applyCommand("/gps/pos/type Plane");
-    lUIinterface.applyCommand("/gps/pos/shape Rectangle"); //Circle
+    lUIinterface.applyCommand("/gps/pos/shape Circle");
     lUIinterface.applyCommand("/gps/pos/centre 0 0 30 cm");    
     lUIinterface.applyCommand("/gps/pos/radius 80 mm");
     lUIinterface.applyCommand("/gps/pos/rot1 0 1 0");
@@ -100,5 +97,5 @@ void AngularScan::runSingleAngularScan(G4double pPhi, G4double pTheta)
     mPhi = pPhi * deg;
     configureScan();
     OMSimUIinterface &lUIinterface = OMSimUIinterface::getInstance();
-    lUIinterface.runBeamOn();
+    lUIinterface.runBeamOn(1);
 }

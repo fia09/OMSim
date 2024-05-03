@@ -28,33 +28,40 @@ double hc_eVnm = 1239.84193;
  */
 void OMSimEffectiveAreaDetector::constructWorld()
 {
-   
     mWorldSolid = new G4Box("World", 370*cm, (370)*cm, 370*cm);
     mWorldLogical = new G4LogicalVolume(mWorldSolid, mData->getMaterial("Ri_Air"), "World_log", 0, 0, 0);
     mWorldPhysical = new G4PVPlacement (0, G4ThreeVector(0.,0.,0.), mWorldLogical, "World_phys", 0, false, 0);
     mWorldLogical->SetVisAttributes(G4VisAttributes(G4Colour(0.0, 0.0, 0.0, 0.0)));
  
-// ********************** water basin *************************
+    // water tank
     G4bool checkOverlaps = true;
-    // I create a box that surrounds the water and tries to be the pool. This is done so the optical properties can be porperly set in the five walls of the pool
-    G4Box *lBoxPool = new G4Box("Pool", 91 * cm, (370 / 2 + 1) * cm, 91 * cm);
+  //  G4Box* lBoxPool = new G4Box("Pool", 91*cm, (370/2+1)*cm, 91*cm);
+  //  G4Box* lWaterSolid = new G4Box("Water", 90*cm, (370/2)*cm, 90*cm);
 
-    G4Box *mWaterSolid = new G4Box("Water", 90 * cm, (370 / 2) * cm, 90 * cm); // water volume that is substracted to the pool
+//######### durschnitllich #####
+  //  G4Box *lBoxPool = new G4Box("Pool", (346.8/2) * cm, (168.6/2+1)* cm, 144/2 * cm);  // Pool
+   // G4Box *lWaterSolid = new G4Box("Water", 345.8/2 * cm, 167.6/2 * cm, 143/2 * cm);  // Water
+
+//######### max. Länge #####
+  //  G4Box *lBoxPool = new G4Box("Pool", (353.5/2) * cm, (174.5/2+1)* cm, 146/2 * cm);  // Pool
+  //  G4Box *lWaterSolid = new G4Box("Water", 352.5/2 * cm, 173.5/2 * cm, 145/2 * cm);  // Water
+
+//######### min. Länge #####
+    G4Box *lBoxPool = new G4Box("Pool", (342.2/2) * cm, (163.2/2+1)* cm, 142/2 * cm);  // Pool
+    G4Box *lWaterSolid = new G4Box("Water", 341.2/2 * cm, 162.2/2 * cm, 141/2 * cm);  // Water
+
 
     //G4SubtractionSolid *lBoxPool = new G4SubtractionSolid("recipiente", lBoxPool1, mWaterSolid, 0, G4ThreeVector(0, 0, 1 * cm)); // final pool
-
     G4LogicalVolume *lPoolLogical = new G4LogicalVolume(lBoxPool, mData->getMaterial("NoOptic_Absorber"), "Pool", 0, 0, 0);
-    G4PVPlacement *PoolPhysical = new G4PVPlacement(0, G4ThreeVector(0, 0, 0 * cm), lPoolLogical, "water_1", mWorldLogical, false, 0, checkOverlaps);
+    G4PVPlacement *lPoolPhysical = new G4PVPlacement(0, G4ThreeVector(0, 0, 0 * cm), lPoolLogical, "Pool_phys", mWorldLogical, false, 0, checkOverlaps);
     lPoolLogical->SetVisAttributes(G4VisAttributes(G4Colour(0.8, 0.8, 0.8, 0.2)));
 
-
-    //mWaterLogical = new G4LogicalVolume(mWaterSolid, Mat_Water, "Water_log", 0, 0, 0);
-    mWaterLogical = new G4LogicalVolume(mWaterSolid, mData->getMaterial("Ri_Water"), "Water_log", 0, 0, 0);
-    G4VPhysicalVolume *mWaterPhysical = new G4PVPlacement(0, G4ThreeVector(0, 0, 0* cm), mWaterLogical, "water_2", lPoolLogical, false, 0, checkOverlaps);
+    mWaterLogical = new G4LogicalVolume(lWaterSolid, mData->getMaterial("Ri_Water"), "Water_log", 0, 0, 0);
+    mWaterPhysical = new G4PVPlacement(0, G4ThreeVector(0, 0, 0* cm), mWaterLogical, "Water_phys", lPoolLogical, false, 0, checkOverlaps);
     mWaterLogical->SetVisAttributes(G4VisAttributes(G4Colour(0.0, 0.0, 1.0, 0.2)));
 
-    G4OpticalSurface *mWater_optical = new G4OpticalSurface("water optical");
-    G4LogicalBorderSurface *watersurface = new G4LogicalBorderSurface("water_skin", mWaterPhysical, PoolPhysical, mData->getOpticalSurface("Refl_tank_plastic"));
+   // G4OpticalSurface *mWater_optical = new G4OpticalSurface("water optical");
+    G4LogicalBorderSurface *watersurface = new G4LogicalBorderSurface("Water_skin", mWaterPhysical, lPoolPhysical, mData->getOpticalSurface("Refl_tank_plastic"));
 
     // balls
     G4NistManager *MatDatBase = G4NistManager::Instance();
@@ -64,23 +71,23 @@ void OMSimEffectiveAreaDetector::constructWorld()
     double ambient_temperature = (20 + 273.15) * kelvin;
     double ambient_pressure = 1.013 * bar;
     G4Material *Mat_Absorber = new G4Material("Absorber Black Paint", 1.0 * g / cm3, 1, kStateSolid, ambient_temperature);
-    Mat_Absorber->AddMaterial(MatDatBase->FindOrBuildMaterial("G4_C"), 100.0 * perCent);
+    Mat_Absorber->AddMaterial(MatDatBase->FindOrBuildMaterial("G4_AIR"), 100.0 * perCent);
     G4bool gBallGrid = true;
+
     // make a dense ball grid
     if (gBallGrid)
     {
-        G4Ellipsoid *Ball_solid = new G4Ellipsoid("ball", ball_rad * cm, ball_rad * cm, ball_rad * cm, (-ball_rad - 5) * cm, dip_depth * cm);
-        G4LogicalVolume *Ball_logical = new G4LogicalVolume(Ball_solid, Mat_Absorber, "Ball logical");
+        G4Ellipsoid *lBall_solid = new G4Ellipsoid("ball", ball_rad * cm, ball_rad * cm, ball_rad * cm, (-ball_rad - 5) * cm, dip_depth * cm);
+        G4LogicalVolume *lBall_logical = new G4LogicalVolume(lBall_solid, Mat_Absorber, "Ball logical");
 
         G4OpticalSurface *ball_optical = new G4OpticalSurface("ball optical");
-        G4LogicalSkinSurface *ballsurface = new G4LogicalSkinSurface("ball_skin", Ball_logical, ball_optical);
+        G4LogicalSkinSurface *ballsurface = new G4LogicalSkinSurface("ball_skin", lBall_logical, ball_optical);
         G4double BallPhotonEnergy[2] = {hc_eVnm / 800 * eV, hc_eVnm / 248 * eV};
         G4double BallReflectivity[2] = {0.04, 0.04};
         G4MaterialPropertiesTable *ballOpticalProperties = new G4MaterialPropertiesTable();
         ballOpticalProperties->AddProperty("REFLECTIVITY", BallPhotonEnergy, BallReflectivity, 2);
         ball_optical->SetMaterialPropertiesTable(ballOpticalProperties);
-
-        Ball_logical->SetVisAttributes(Alu_vis);
+        lBall_logical->SetVisAttributes(Alu_vis);
 
         // Define one layer as one assembly volume
         G4AssemblyVolume *assemblyDetector = new G4AssemblyVolume();
@@ -93,16 +100,47 @@ void OMSimEffectiveAreaDetector::constructWorld()
         // Rotation of the assembly inside the world
         G4RotationMatrix Rm;
 
+ /*              
+//######### durschnitllich #####
         // make one ball to multiply later (layer could also consist of multiple objects)
-        Ta.setX((-90 + ball_rad) * cm);
-        Ta.setY((-185 + ball_rad) * cm);
-        Ta.setZ(90 * cm - dip_depth * cm);
+        Ta.setX((-345.8/2 + ball_rad) * cm);
+        Ta.setY((-167.6/2 + ball_rad) * cm);
+        Ta.setZ(143/2 * cm - dip_depth * cm);
         Tr = G4Transform3D(Ra, Ta);
-        assemblyDetector->AddPlacedVolume(Ball_logical, Tr);
+        assemblyDetector->AddPlacedVolume(lBall_logical, Tr);
 
         // number of balls next to each other (y)
-        int yseries_len = std::floor(370 / (2 * ball_rad));
-        int xseries_len = std::floor((180 - 2 * ball_rad) / (ball_rad * std::sqrt(3)) + 1);
+        int yseries_len = std::floor((167.6)/(2*ball_rad));
+        int xseries_len = std::floor((345.8-2*ball_rad)/(ball_rad*std::sqrt(3))+1);
+*/ 
+/* 
+ //######### max. Länge #####     
+// make one ball to multiply later (layer could also consist of multiple objects)
+        Ta.setX((-352.5/2+ ball_rad) * cm);
+        Ta.setY((-173.5/2 + ball_rad) * cm);
+        Ta.setZ(145/2 * cm - dip_depth * cm);
+        Tr = G4Transform3D(Ra, Ta);
+        assemblyDetector->AddPlacedVolume(lBall_logical, Tr);
+
+        // number of balls next to each other (y)
+        int yseries_len = std::floor((173.5)/(2*ball_rad));
+        int xseries_len = std::floor((352.5-2*ball_rad)/(ball_rad*std::sqrt(3))+1);
+*/
+ 
+//######### min. Länge #####
+// make one ball to multiply later (layer could also consist of multiple objects)
+        Ta.setX((-341.2/2 + ball_rad) * cm);
+        Ta.setY((-162.2/2 + ball_rad) * cm);
+        Ta.setZ(141/2* cm - dip_depth * cm);
+        Tr = G4Transform3D(Ra, Ta);
+        assemblyDetector->AddPlacedVolume(lBall_logical, Tr);
+
+        // number of balls next to each other (y)
+        int yseries_len = std::floor((162.2)/(2*ball_rad));
+        int xseries_len = std::floor((341.2-2*ball_rad)/(ball_rad*std::sqrt(3))+1);
+
+
+
 
         for (unsigned int i = 0; i < xseries_len; i++)
         {
@@ -194,7 +232,7 @@ void OMSimEffectiveAreaDetector::constructDetector()
     if (lOpticalModule)
     {
         log_critical("Here");
-        lOpticalModule->placeIt(G4ThreeVector(0, 0, 0), G4RotationMatrix(), mWaterLogical, "");
+        lOpticalModule->placeIt(G4ThreeVector(140*cm, 0*cm, 0*cm), G4RotationMatrix(), mWaterLogical, ""); // right position coordinates needed
         lOpticalModule->configureSensitiveVolume(this);
     }
 }

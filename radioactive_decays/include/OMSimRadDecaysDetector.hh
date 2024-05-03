@@ -28,7 +28,7 @@ public:
 private:
     void constructWorld();
     void constructDetector();
-    
+    G4LogicalVolume *mWaterLogical;
 };
 
 #endif
