@@ -80,7 +80,7 @@ void mDOM::construction()
                                                        "Gelcorpus logical");
 
     G4LogicalVolume *lSupStructureLogical = new G4LogicalVolume(lSupStructureSolid,
-                                                                mData->getMaterial("NoOptic_Absorber"),
+                                                                mData->getMaterial("NoOptic_Absorber"),//NoOptic_Absorber; change to reflective material Refl_SupStructure
                                                                 "TubeHolder logical");
 
     G4LogicalVolume *lGlassLogical = new G4LogicalVolume(lGlassSolid,

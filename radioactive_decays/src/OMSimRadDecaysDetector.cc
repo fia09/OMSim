@@ -21,7 +21,7 @@ double hc_eVnm = 1239.84193;
  * @brief Constructs the world volume (sphere).
  */
 void OMSimRadDecaysDetector::constructWorld()
-{
+{   
     mWorldSolid = new G4Box("World", 370*cm, (370)*cm, 370*cm);
     mWorldLogical = new G4LogicalVolume(mWorldSolid, mData->getMaterial("Ri_Air"), "World_log", 0, 0, 0);
     mWorldPhysical = new G4PVPlacement (0, G4ThreeVector(0.,0.,0.), mWorldLogical, "World_phys", 0, false, 0);
@@ -35,7 +35,7 @@ void OMSimRadDecaysDetector::constructWorld()
     G4PVPlacement *lPoolPhysical = new G4PVPlacement(0, G4ThreeVector(0, 0, 0 * cm), lPoolLogical, "Pool_phys", mWorldLogical, false, 0, checkOverlaps);
     lPoolLogical->SetVisAttributes(G4VisAttributes(G4Colour(0.8, 0.8, 0.8, 0.2)));
 
-    mWaterLogical = new G4LogicalVolume(lWaterSolid, mData->getMaterial("Ri_Water"), "Water_log", 0, 0, 0);
+    mWaterLogical = new G4LogicalVolume(lWaterSolid, mData->getMaterial("Ri_Air"), "Water_log", 0, 0, 0);
     G4VPhysicalVolume *lWaterPhysical = new G4PVPlacement(0, G4ThreeVector(0, 0, 0* cm), mWaterLogical, "Water_phys", lPoolLogical, false, 0, checkOverlaps);
     G4VisAttributes *Water_vis = new G4VisAttributes(G4Colour(0.0, 0.0, 1.0, 0.2));
     mWaterLogical->SetVisAttributes(Water_vis);
