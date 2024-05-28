@@ -52,12 +52,11 @@ void LOM16::construction()
     setPMTAndGelpadPositions();
 
     // CAD internal components
-    if (false)
-    {
-        placeCADSupportStructure();
-        lGlassSolid = substractToVolume(lGlassSolid, G4ThreeVector(0, 0, 0), G4RotationMatrix(), "Glass");
-        lAirSolid = substractToVolume(lAirSolid, G4ThreeVector(0, 0, 0), G4RotationMatrix(), "Gel");
-    }
+
+    placeCADSupportStructure();
+    lGlassSolid = substractToVolume(lGlassSolid, G4ThreeVector(0, 0, 0), G4RotationMatrix(), "Glass");
+    lAirSolid = substractToVolume(lAirSolid, G4ThreeVector(0, 0, 0), G4RotationMatrix(), "Gel");
+    
     // Logicals
     G4LogicalVolume *lGlassLogical = new G4LogicalVolume(lGlassSolid, mData->getMaterial("RiAbs_Glass_Vitrovex"), " Glass_log"); // Vessel
     G4LogicalVolume *lInnerVolumeLogical = new G4LogicalVolume(lAirSolid, mData->getMaterial("Ri_Air"), "Inner volume logical"); // Inner volume of vessel (mothervolume of all internal components)
@@ -135,7 +134,7 @@ void LOM16::placeCADSupportStructure()
     for (auto iSolid : lMesh->GetSolids())
     {
         G4LogicalVolume *lSupportStructureLogical = new G4LogicalVolume(iSolid, mData->getMaterial("NoOptic_Absorber"), "SupportStructureCAD_Logical");
-        lSupportStructureLogical->SetVisAttributes(mAluVis);
+        lSupportStructureLogical->SetVisAttributes(mAbsorberVis);
         appendComponent(iSolid, lSupportStructureLogical, G4ThreeVector(0, 0, 0), G4RotationMatrix(), "SupportStructureCAD");
     }
 }

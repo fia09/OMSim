@@ -27,8 +27,7 @@ void effectiveAreaSimulation()
 	lAnalysisManager.mOutputFileNameMultiplicity = lArgs.get<std::string>("output_file") + "_multiplicity.dat";
 	lAnalysisManager.mOutputFileNameInfo = lArgs.get<std::string>("output_file") + "_info.dat"; 
 	bool lWriteHeader = !lArgs.get<bool>("no_header");
-	if (lWriteHeader) lAnalysisManager.writeHeader();
-
+	if (lWriteHeader) lAnalysisManager.writeHeader("Phi", "Theta", "Wavelength");
 
 	// If angle file is provided, run over all angle pairs in file
 	if (lArgs.keyExists("angles_file"))
@@ -40,7 +39,7 @@ void effectiveAreaSimulation()
 		for (std::vector<int>::size_type i = 0; i != lThetas.size(); i++)
 		{
 			lScanner->runSingleAngularScan(lPhis.at(i), lThetas.at(i));
-			lAnalysisManager.writeScan(lPhis.at(i), lThetas.at(i));
+			lAnalysisManager.writeScan(lPhis.at(i), lThetas.at(i),  lArgs.get<G4double>("wavelength"));
 			lAnalysisManager.writeMultiplicity(lArgs.get<G4double>("timeWindow_multiplicity"));
 			lAnalysisManager.writeHitInformation();
 			lHitManager.reset();

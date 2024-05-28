@@ -39,3 +39,4 @@ doxygen_documentation/html
 doxygen_documentation/latex
 /.vscode/
 .vscode/
+CMakeLists.txt
