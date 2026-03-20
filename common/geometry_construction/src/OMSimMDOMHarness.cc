@@ -23,10 +23,10 @@ void mDOMHarness::construction()
 {
 
     bandsAndClamps();
-    bridgeRopesSolid();
-    mainDataCable();
-    pads();
-    PCA();
+//    bridgeRopesSolid();
+    //mainDataCable();
+    //pads();
+    //PCA();
     plug();
     teraBelt();
 }
